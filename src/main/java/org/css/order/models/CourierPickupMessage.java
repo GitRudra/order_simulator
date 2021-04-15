@@ -6,18 +6,23 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-public class DelayedCourierPickup implements Delayed {
-    private static final Logger logger = LoggerFactory.getLogger(DelayedCourierPickup.class.getName());
-    private Order order;
+public class CourierPickupMessage implements Delayed {
+    private static final Logger logger = LoggerFactory.getLogger(CourierPickupMessage.class.getName());
+    private String orderId;
     private Long dequeueTime;
+    private Long orderPlaceTime;
+    private Integer shelfDecayModifier;
+    private Integer inherentValue;
 
-    public DelayedCourierPickup(Order order, Long delay) {
-        this.order = order;
+
+    public CourierPickupMessage(String orderId, Long delay) {
+        this.orderId = orderId;
         dequeueTime = System.currentTimeMillis()+delay;
+        orderPlaceTime = System.currentTimeMillis();
     }
 
-    public Order getOrder() {
-        return order;
+    public String getOrderId() {
+        return orderId;
     }
 
     public Long getDequeueTime() {
@@ -32,14 +37,14 @@ public class DelayedCourierPickup implements Delayed {
 
     @Override
     public int compareTo(Delayed o) {
-        DelayedCourierPickup p = (DelayedCourierPickup)o;
+        CourierPickupMessage p = (CourierPickupMessage)o;
         return Long.compare(this.dequeueTime,p.dequeueTime);
     }
 
     @Override
     public String toString() {
         return "DelayedCourierPickup{" +
-                "order=" + order.getId() +
+                "order=" + orderId +
                 ", dequeueTime=" + dequeueTime +
                 '}';
     }

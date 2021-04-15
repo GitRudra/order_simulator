@@ -1,11 +1,8 @@
 package org.css.order.launcher;
 
-import org.css.order.models.DelayedCourierPickup;
+import org.css.order.models.CourierPickupMessage;
 import org.css.order.models.Order;
-import org.css.order.services.CourierService;
-import org.css.order.services.OrderConsumer;
 import org.css.order.services.OrderDetailsJsonParser;
-import org.css.order.services.OrderProducer;
 import org.css.order.shelf.ShelfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,7 @@ public class OrderSimulatorExecutorService {
     public static final Logger logger = LoggerFactory.getLogger(OrderSimulatorExecutorService.class.getName());
     private ShelfManager shelfManager;
     BlockingQueue<Order> producerConsumerQueue;
-    BlockingQueue<DelayedCourierPickup> dispatchQueue;
+    BlockingQueue<CourierPickupMessage> dispatchQueue;
 
     public void initiateSimulator(){
         shelfManager  = new ShelfManager(10,15);

@@ -1,6 +1,6 @@
 package org.css.order.launcher;
 
-import org.css.order.models.DelayedCourierPickup;
+import org.css.order.models.CourierPickupMessage;
 import org.css.order.models.Order;
 import org.css.order.services.CourierService;
 import org.css.order.services.OrderConsumer;
@@ -24,11 +24,7 @@ public class OrderSimulator {
     public static final Logger logger = LoggerFactory.getLogger(OrderSimulator.class.getName());
     private ShelfManager shelfManager;
     BlockingQueue<Order> producerConsumerQueue;
-    BlockingQueue<DelayedCourierPickup> dispatchQueue;
-
-    public void initiateSimulator(){
-
-    }
+    BlockingQueue<CourierPickupMessage> dispatchQueue;
 
     public OrderSimulator() {
         producerConsumerQueue = new ArrayBlockingQueue<>(1000);
@@ -50,15 +46,13 @@ public class OrderSimulator {
         }
 
         Thread producerThread = new Thread(new OrderProducer(producerConsumerQueue,orderQueue,ingestionRate));
-        Thread consumerThread1 = new Thread(new OrderConsumer(producerConsumerQueue, dispatchQueue, shelfManager,"Consumer 1"));
-        Thread consumerThread2 = new Thread(new OrderConsumer(producerConsumerQueue, dispatchQueue, shelfManager,"Consumer 2"));
-        Thread courierThread1 = new Thread(new CourierService(dispatchQueue,shelfManager,"Courier Service-1"));
-        Thread courierThread2 = new Thread(new CourierService(dispatchQueue,shelfManager,"Courier Service-2"));
+        Thread consumerThread1 = new Thread(new OrderConsumer(producerConsumerQueue, dispatchQueue, shelfManager));
+        Thread courierThread1 = new Thread(new CourierService(dispatchQueue,shelfManager));
 
+        courierThread1.setName("Courier 1");
         courierThread1.start();
-        courierThread2.start();
+        consumerThread1.setName("Consumer 1");
         consumerThread1.start();
-        consumerThread2.start();
         producerThread.start();
 
         logger.info("Main thread is closing");
