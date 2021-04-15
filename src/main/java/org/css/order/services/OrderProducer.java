@@ -56,7 +56,7 @@ public class OrderProducer implements Runnable{
         } catch (InterruptedException e) {
             logger.warn("Producer thread interrupted", e);
         } finally {
-            logger.info("No more message for ingestion. Producer is closing");
+            logger.info("No more message for ingestion. Order producer closed");
         }
     }
 }

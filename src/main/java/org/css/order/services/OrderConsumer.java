@@ -1,8 +1,8 @@
 package org.css.order.services;
 
-import org.css.order.models.CourierPickupMessage;
 import org.css.order.models.Order;
 import org.css.order.models.CookedOrder;
+import org.css.order.models.PickupRequestMessage;
 import org.css.order.shelf.ShelfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit;
 public class OrderConsumer implements Runnable {
     public static final Logger logger = LoggerFactory.getLogger(OrderConsumer.class.getName());
     BlockingQueue<Order> producerConsumerQueue;
-    BlockingQueue<CourierPickupMessage> courierQueue;
+    BlockingQueue<PickupRequestMessage> courierQueue;
     ShelfManager shelfManager;
 
     public OrderConsumer(BlockingQueue<Order> producerConsumerQueue,
-                         BlockingQueue<CourierPickupMessage> courierQueue,
+                         BlockingQueue<PickupRequestMessage> courierQueue,
                          ShelfManager shelfManager) {
         this.producerConsumerQueue = producerConsumerQueue;
         this.courierQueue = courierQueue;
@@ -38,7 +38,7 @@ public class OrderConsumer implements Runnable {
                     Thread.currentThread().interrupt();
                     continue;
                 }
-                CourierPickupMessage cp = new CourierPickupMessage(o.getId(), getRandomDelay(2, 6));
+                PickupRequestMessage cp = new PickupRequestMessage(o.getId(), getRandomDelay(2, 6));
                 courierQueue.put(cp);
                 logger.info("New order received to cook. Order Id {}", o.getId());
                 CookedOrder cookedOrder = createCookedOrder(o);
@@ -48,7 +48,7 @@ public class OrderConsumer implements Runnable {
         } catch (InterruptedException e) {
             logger.error("Consumer thread interrupted", e);
         } finally {
-            logger.info("No more message for consume. Consumer is closing");
+            logger.info("No more message for consume. Order Consumer closed");
         }
     }
 

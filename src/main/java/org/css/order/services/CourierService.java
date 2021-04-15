@@ -1,8 +1,7 @@
 package org.css.order.services;
 
 import org.css.order.models.CookedOrder;
-import org.css.order.models.CourierPickupMessage;
-import org.css.order.models.Order;
+import org.css.order.models.PickupRequestMessage;
 import org.css.order.shelf.ShelfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 public class CourierService implements Runnable {
     public static final Logger logger = LoggerFactory.getLogger(CourierService.class.getName());
-    BlockingQueue<CourierPickupMessage> courierQueue;
+    BlockingQueue<PickupRequestMessage> courierQueue;
     ShelfManager shelfManager;
-    public CourierService(BlockingQueue<CourierPickupMessage> courierQueue, ShelfManager shelfManager) {
+    public CourierService(BlockingQueue<PickupRequestMessage> courierQueue, ShelfManager shelfManager) {
         this.courierQueue = courierQueue;
         this.shelfManager = shelfManager;
     }
@@ -27,8 +26,11 @@ public class CourierService implements Runnable {
                 if(Thread.currentThread().isInterrupted()){
                   break;
                 }
-                CourierPickupMessage cp = courierQueue.poll(1000, TimeUnit.MILLISECONDS);
+                PickupRequestMessage cp = courierQueue.poll(1000, TimeUnit.MILLISECONDS);
                 if(cp == null){
+                    if(courierQueue.size() == 0){
+                        Thread.currentThread().interrupt();
+                    }
                     continue;
                 }
                 logger.info("New pickup request received to cook. Order Id {}", cp.getOrderId());
@@ -39,15 +41,12 @@ public class CourierService implements Runnable {
                 } catch (Exception e) {
                     logger.info("Order not found !!! :( {}", e.getMessage());
                 }
-                if(courierQueue.size() == 0){
-                    Thread.currentThread().interrupt();
-                    continue;
-                }
+
             }
         } catch (InterruptedException e) {
             logger.error("Courier service thread interrupted", e);
         } finally {
-            logger.info("No more message for consume. Courier pickup is closing");
+            logger.info("No more message for consume. Courier pickup service closed");
         }
     }
 }

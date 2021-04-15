@@ -2,6 +2,9 @@ package org.css.order.models;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Order class store the order information available in Order Json.
+ */
 @XmlRootElement
 public class Order {
     private String id;

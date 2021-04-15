@@ -6,19 +6,18 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-public class CourierPickupMessage implements Delayed {
-    private static final Logger logger = LoggerFactory.getLogger(CourierPickupMessage.class.getName());
-    private String orderId;
-    private Long dequeueTime;
-    private Long orderPlaceTime;
-    private Integer shelfDecayModifier;
-    private Integer inherentValue;
+/**
+ * The class {@PickupRequestMessage} is an immutable class which represents an pickup message.
+ * It implements {@link Delayed} to hold some delay before deliver to the courier service.
+ */
+public class PickupRequestMessage implements Delayed {
+    private static final Logger logger = LoggerFactory.getLogger(PickupRequestMessage.class.getName());
+    private final String orderId;
+    private final Long dequeueTime;
 
-
-    public CourierPickupMessage(String orderId, Long delay) {
+    public PickupRequestMessage(String orderId, Long delay) {
         this.orderId = orderId;
         dequeueTime = System.currentTimeMillis()+delay;
-        orderPlaceTime = System.currentTimeMillis();
     }
 
     public String getOrderId() {
@@ -29,15 +28,20 @@ public class CourierPickupMessage implements Delayed {
         return dequeueTime;
     }
 
+    /**
+     * Returns the remaining delay associated with the object.
+     * @param unit - {@link TimeUnit}
+     * @return remaining delay {@link Long}
+     */
     @Override
     public long getDelay(TimeUnit unit) {
-        Long diff = dequeueTime - System.currentTimeMillis();
+        long diff = dequeueTime - System.currentTimeMillis();
         return unit.convert(diff,TimeUnit.MILLISECONDS);
     }
 
     @Override
     public int compareTo(Delayed o) {
-        CourierPickupMessage p = (CourierPickupMessage)o;
+        PickupRequestMessage p = (PickupRequestMessage)o;
         return Long.compare(this.dequeueTime,p.dequeueTime);
     }
 

@@ -12,13 +12,26 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Class to parse the order json.
+ */
 public class OrderDetailsJsonParser implements OrderDetailsParser{
     public static final Logger logger = LoggerFactory.getLogger(OrderDetailsJsonParser.class);
+
+    /**
+     * Return the order file name
+     * @return - order file name.
+     */
     @Override
     public String getFileName() {
         return "order.json";
     }
 
+    /**
+     * Parse the order json and create a {@code ArrayList} of {@link Order}.
+     * @return - Array list of Order
+     * @throws IOException if the order file not found.
+     */
     @Override
     public List<Order> getOrders() throws IOException {
         logger.info("Loading the orders from the file ....");
