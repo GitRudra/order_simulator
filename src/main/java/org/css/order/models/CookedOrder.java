@@ -8,7 +8,7 @@ public class CookedOrder {
     /* The Original Order*/
     private final Order o;
 
-    private final Long inherentValue;
+    private final Float inherentValue;
     private final Long orderShelvedTime;
     private Boolean keptSingleTemperatureShelf;
 
@@ -24,10 +24,13 @@ public class CookedOrder {
     }
 
     public boolean isOrderWasted() {
-        return inherentValue - calculateOrderValue() == 0;
+        float orderCurrentValue = calculateOrderValue();
+        //Added the condition (inherentValue != orderCurrentValue) to prevent the case when order is picked up
+        //instantly after putting into shelf.
+        return (inherentValue != orderCurrentValue) && (inherentValue - orderCurrentValue == 0);
     }
 
-    public Long getInherentValue() {
+    public Float getInherentValue() {
         return inherentValue;
     }
 
@@ -51,10 +54,11 @@ public class CookedOrder {
      * Calculate the order current value when invoked.
      * @return order value - {@code Long}
      */
-    public Long calculateOrderValue() {
+    public Float calculateOrderValue() {
         long orderAge = (System.currentTimeMillis() - orderShelvedTime)/1000;
         int shelfDecayModifier = keptSingleTemperatureShelf ? 1 : 2;
-        return (long) (this.o.getShelfLife() - orderAge - (this.o.getDecayRate() * orderAge * shelfDecayModifier)) / this.o.getShelfLife();
+        float value = (this.o.getShelfLife() - orderAge - (this.o.getDecayRate() * orderAge * shelfDecayModifier)) / this.o.getShelfLife();
+        return value;
     }
 
     @Override

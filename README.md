@@ -9,3 +9,24 @@ Create a order simulator which will take the order and cooked the order and send
 3. The pickup service will receive a message with a delay randomly between 2 and 6 sec
 4. Once the pickup is done the order will be delivered instantly.
 
+## How to run the code ?
+Run the main method in the class <code>src/main/java/org/css/order/launcher/OrderSimulatorLauncher.java</code>
+The method <code>simulateOrder</code> takes the value of ingestion rate.
+
+## Shelf manager
+For managing the cooked order in the shelf following logic has been implemented.
+### Logic to put order in shelf
+1. When an order is cooked,  we associate a timestamp with the order to indicate <code>orderShelvedTime</code>
+2. Check for the shelf availability depending on the <code>temp</code> field in the order.
+3. If the shelf is full then it will check for overflow shelf.
+4. If overflow shelf is also full, it will then check for any order which can be moved
+   to corresponding shelf (if available) based on the <code>temp</code> in the order.
+5. If no place found at all then trash a random order from the overflow shelf.
+
+### Logic to get order from the shelf
+1. Courier service after receiving an order search for the order in the shelf.
+2. If the order not found then the <code>ShelfManager</code> throws exception. 
+   Based on what courier service decide the order availability.
+3. If the order is wasted based on the formula provided in challenge prompt will be considered
+   as order not found.
+4.    

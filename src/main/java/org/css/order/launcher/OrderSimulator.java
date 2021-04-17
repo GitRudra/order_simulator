@@ -25,7 +25,7 @@ import java.util.concurrent.DelayQueue;
  */
 public class OrderSimulator {
     public static final Logger logger = LoggerFactory.getLogger(OrderSimulator.class.getName());
-    private ShelfManager shelfManager;
+    private final ShelfManager shelfManager;
     BlockingQueue<Order> producerConsumerQueue;
     BlockingQueue<PickupRequestMessage> dispatchQueue;
 

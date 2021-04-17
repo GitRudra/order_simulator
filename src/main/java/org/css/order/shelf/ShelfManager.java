@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ShelfManager {
     private static final Logger logger  = LoggerFactory.getLogger(ShelfManager.class.getName());
-    ConcurrentHashMap<String, CookedOrder> hotShelve;
-    ConcurrentHashMap<String, CookedOrder> coldShelve;
-    ConcurrentHashMap<String, CookedOrder> frozenShelve;
-    ConcurrentHashMap<String, CookedOrder> overflowShelve;
+    private final ConcurrentHashMap<String, CookedOrder> hotShelve;
+    private final ConcurrentHashMap<String, CookedOrder> coldShelve;
+    private final ConcurrentHashMap<String, CookedOrder> frozenShelve;
+    private final ConcurrentHashMap<String, CookedOrder> overflowShelve;
     private final int singleTemperatureSelfCapacity;
     private final int overflowSelfCapacity;
 
@@ -46,12 +46,13 @@ public class ShelfManager {
         }else{
             insertIntoOverflowShelve(overflowShelve,cookedOrder);
         }
+        displayOrderShelves();
         logger.info("successfully kept the order in the shelf. Order Id {}",o.getId());
     }
 
     private void insertSingleTemperatureShelve(ConcurrentHashMap<String,CookedOrder> target, CookedOrder cookedOrder){
         if (target.size() == singleTemperatureSelfCapacity){
-            logger.info("Target shelf is full. Attempting to put the order in the overflow shelf.");
+            logger.info("Target shelf {} is full. Attempting to put the order in the overflow shelf.", cookedOrder.getOrder().getTemp());
             insertIntoOverflowShelve(overflowShelve,cookedOrder);
         }else{
             target.put(cookedOrder.getOrder().getId(),cookedOrder);
@@ -103,6 +104,24 @@ public class ShelfManager {
         overflowShelve.remove(keysAsArray.get(r.nextInt(keysAsArray.size())));
     }
 
+    public CookedOrder getOrderInShelfWithListing(String orderId) throws Exception {
+        CookedOrder cp = null;
+        try {
+            cp = getOrderInShelf(orderId);
+        } catch (Exception e) {
+            throw e;
+        }finally {
+            displayOrderShelves();
+        }
+        return cp;
+    }
+
+    /**
+     * Method to get the order from the shelve.
+     * @param orderId - The String order id to be serached in the shelf.
+     * @return - {@link CookedOrder} the cooked order details if found and not wasted.
+     * @throws Exception When the order not found or the order is wasted.
+     */
     public CookedOrder getOrderInShelf(String orderId) throws Exception {
         if(hotShelve.get(orderId) != null){
             CookedOrder o = hotShelve.remove(orderId);
@@ -133,6 +152,21 @@ public class ShelfManager {
                 throw new Exception("Order not found");
             }
         }
+
+    }
+
+    public void displayOrderShelves(){
+        StringBuilder hotOrders = new StringBuilder();
+        StringBuilder coldOrders = new StringBuilder();
+        StringBuilder frozenOrders = new StringBuilder();
+        StringBuilder overflowOrders = new StringBuilder();
+        hotShelve.forEach((key, value) -> hotOrders.append(value.toString()));
+        coldShelve.forEach((key, value) -> coldOrders.append(value.toString()));
+        frozenShelve.forEach((key, value) -> frozenOrders.append(value.toString()));
+        overflowShelve.forEach((key, value) -> overflowOrders.append(value.toString()));
+
+        logger.info("Order Shelve Listing: \nHot Orders :[{}]  \nCold Orders :[{}]  \nFrozen Orders :[{}] \nOverflow Orders :[{}] ",
+                        hotOrders.toString(),coldOrders.toString(),frozenOrders.toString(),overflowOrders.toString());
 
     }
 }

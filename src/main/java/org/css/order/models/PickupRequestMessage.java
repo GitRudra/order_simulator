@@ -17,7 +17,7 @@ public class PickupRequestMessage implements Delayed {
 
     public PickupRequestMessage(String orderId, Long delay) {
         this.orderId = orderId;
-        dequeueTime = System.currentTimeMillis()+delay;
+        dequeueTime = System.currentTimeMillis() + delay;
     }
 
     public String getOrderId() {
@@ -30,19 +30,20 @@ public class PickupRequestMessage implements Delayed {
 
     /**
      * Returns the remaining delay associated with the object.
+     *
      * @param unit - {@link TimeUnit}
      * @return remaining delay {@link Long}
      */
     @Override
     public long getDelay(TimeUnit unit) {
         long diff = dequeueTime - System.currentTimeMillis();
-        return unit.convert(diff,TimeUnit.MILLISECONDS);
+        return unit.convert(diff, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public int compareTo(Delayed o) {
-        PickupRequestMessage p = (PickupRequestMessage)o;
-        return Long.compare(this.dequeueTime,p.dequeueTime);
+        PickupRequestMessage p = (PickupRequestMessage) o;
+        return Long.compare(this.dequeueTime, p.dequeueTime);
     }
 
     @Override
