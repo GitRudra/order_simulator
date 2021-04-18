@@ -27,7 +27,6 @@ class CourierServiceTest {
         courierQueue = new DelayQueue<>();
         oc = new OrderConsumer(producerConsumerQueue,courierQueue,s);
         cs = new CourierService(courierQueue,s);
-
     }
 
     @Test

@@ -24,7 +24,7 @@ class ShelfManagerTest {
     }
 
     @Test()
-    void testShelfManagerOrderNOtFound() throws Exception {
+    void testShelfManagerOrderNotFound() throws Exception {
         ShelfManager shelfManager = new ShelfManager(2,4);
         Order o1 = new Order();
         o1.setId("id1");
@@ -39,7 +39,4 @@ class ShelfManagerTest {
         });
     }
 
-    @Test
-    void getOrderInShelf() {
-    }
 }

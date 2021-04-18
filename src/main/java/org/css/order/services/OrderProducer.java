@@ -13,9 +13,9 @@ import java.util.concurrent.BlockingQueue;
  */
 public class OrderProducer implements Runnable{
     public static final Logger logger = LoggerFactory.getLogger(OrderProducer.class.getName());
-    BlockingQueue<Order> producerConsumerQueue;
-    Queue<Order> orderSourceQueue;
-    int ingestionRate;
+    private BlockingQueue<Order> producerConsumerQueue;
+    private Queue<Order> orderSourceQueue;
+    private int ingestionRate;
 
     /**
      * Constructor to create a {@code OrderProducer} object
@@ -38,6 +38,7 @@ public class OrderProducer implements Runnable{
     @Override
     public void run() {
         try {
+            checkInitialisation();
             while (true) {
                 if(Thread.currentThread().isInterrupted()){
                     break;
@@ -51,12 +52,36 @@ public class OrderProducer implements Runnable{
                     Thread.currentThread().interrupt();
                     continue;
                 }
-                Thread.sleep(1000);
+               Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             logger.warn("Producer thread interrupted", e);
+        } catch (Exception e) {
+            logger.error("Failed to run the producer. {}", e.getMessage(),e);
         } finally {
             logger.info("No more message for ingestion. Order producer closed");
         }
+    }
+
+    private void checkInitialisation()throws Exception{
+        if(producerConsumerQueue == null || orderSourceQueue == null){
+            throw new Exception("All the necessary component has not initialized");
+        }
+    }
+
+    /**
+     * Helper method to get the count of remaining order in the order source queue
+     * @return int
+     */
+    public boolean hasMoreOrder(){
+        return !orderSourceQueue.isEmpty();
+    }
+
+    /**
+     * Helper method to get the pending message in the {@code producerConsumerQueue}
+     * @return count of messages in producerConsumer queue.
+     */
+    public int getMessagesCount(){
+        return producerConsumerQueue.size();
     }
 }

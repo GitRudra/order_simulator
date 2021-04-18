@@ -57,7 +57,7 @@ public class CourierService implements Runnable {
         } catch (InterruptedException e) {
             logger.error("Courier service thread interrupted", e);
         } catch (Exception e) {
-            logger.error("Failed to run the thread. {}", e.getMessage(),e);
+            logger.error("Failed to run the courier. {}", e.getMessage(),e);
         } finally {
             logger.info("No more message for consume. Courier pickup service closed");
         }

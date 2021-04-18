@@ -59,7 +59,7 @@ public class OrderConsumer implements Runnable {
         } catch (InterruptedException e) {
             logger.error("Consumer thread interrupted", e);
         } catch(Exception e){
-            logger.error("Failed to run the thread. {}", e.getMessage(),e);
+            logger.error("Failed to run the consumer. {}", e.getMessage(),e);
         }finally {
             logger.info("No more message for consume. Order Consumer closed");
         }

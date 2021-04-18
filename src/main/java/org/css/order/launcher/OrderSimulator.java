@@ -26,15 +26,15 @@ import java.util.concurrent.DelayQueue;
 public class OrderSimulator {
     public static final Logger logger = LoggerFactory.getLogger(OrderSimulator.class.getName());
     private final ShelfManager shelfManager;
-    BlockingQueue<Order> producerConsumerQueue;
-    BlockingQueue<PickupRequestMessage> dispatchQueue;
-    private final int SINGLE_TEMPERATURE_SHELF_CAPACITY = 10;
-    private final int OVERFLOW_SHELF_CAPACITY = 15;
+    private final BlockingQueue<Order> producerConsumerQueue;
+    private final BlockingQueue<PickupRequestMessage> dispatchQueue;
 
     public OrderSimulator() {
         producerConsumerQueue = new ArrayBlockingQueue<>(1000);
         dispatchQueue = new DelayQueue<>();
-        shelfManager  = new ShelfManager(SINGLE_TEMPERATURE_SHELF_CAPACITY,OVERFLOW_SHELF_CAPACITY);
+        int singleTemperatureShelfCapacity = 10;
+        int overflowShelfCapacity = 15;
+        shelfManager  = new ShelfManager(singleTemperatureShelfCapacity, overflowShelfCapacity);
 
     }
 
