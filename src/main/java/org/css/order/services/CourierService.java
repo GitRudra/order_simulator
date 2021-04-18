@@ -32,6 +32,7 @@ public class CourierService implements Runnable {
     public void run() {
         logger.info("Courier service thread started");
         try {
+            checkInitialisation();
             while (true) {
                 if(Thread.currentThread().isInterrupted()){
                   break;
@@ -55,8 +56,16 @@ public class CourierService implements Runnable {
             }
         } catch (InterruptedException e) {
             logger.error("Courier service thread interrupted", e);
+        } catch (Exception e) {
+            logger.error("Failed to run the thread. {}", e.getMessage(),e);
         } finally {
             logger.info("No more message for consume. Courier pickup service closed");
+        }
+    }
+
+    private void checkInitialisation()throws Exception{
+        if(courierQueue == null || shelfManager == null){
+            throw new Exception("All the necessary component has not initialized");
         }
     }
 }

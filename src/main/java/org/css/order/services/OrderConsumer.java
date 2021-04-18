@@ -39,6 +39,7 @@ public class OrderConsumer implements Runnable {
     public void run() {
         logger.info("Consumer thread started");
         try {
+            checkInitialisation();
             while (true) {
                 if(Thread.currentThread().isInterrupted()){
                     break;
@@ -57,7 +58,9 @@ public class OrderConsumer implements Runnable {
             }
         } catch (InterruptedException e) {
             logger.error("Consumer thread interrupted", e);
-        } finally {
+        } catch(Exception e){
+            logger.error("Failed to run the thread. {}", e.getMessage(),e);
+        }finally {
             logger.info("No more message for consume. Order Consumer closed");
         }
     }
@@ -72,6 +75,12 @@ public class OrderConsumer implements Runnable {
     public Long getRandomDelay(int min, int max) {
         Random random = new Random();
         return (random.nextInt(max - min) + min) * 1000L;
+    }
+
+    private void checkInitialisation()throws Exception{
+        if(producerConsumerQueue == null || courierQueue == null || shelfManager == null){
+            throw new Exception("All the necessary component has not initialized");
+        }
     }
 
     private CookedOrder createCookedOrder(Order o){

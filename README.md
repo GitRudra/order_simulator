@@ -29,4 +29,10 @@ For managing the cooked order in the shelf following logic has been implemented.
    Based on what courier service decide the order availability.
 3. If the order is wasted based on the formula provided in challenge prompt will be considered
    as order not found.
-4.    
+
+##Overall design:
+1. Created three different thread one for each Order Producer, Order Consumer, and Courier Service.
+2. The message will be transmitted from one thread to other through blocking queue.
+3. In microservice architecture each and every thread will be replaced by individual microservices.
+4. Blocking queue will be replaced by distributed queue like kafka.
+5. Shelf manager can be replaced by redis with persistent enable.

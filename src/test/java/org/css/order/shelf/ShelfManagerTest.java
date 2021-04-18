@@ -34,11 +34,9 @@ class ShelfManagerTest {
         o1.setName("Test Order");
         CookedOrder cd  =  new CookedOrder(o1);
         shelfManager.putOrderInTheShelf(cd);
-//        CookedOrder expected = shelfManager.getOrderInShelf("id12");
         assertThrows(Exception.class,()->{
             shelfManager.getOrderInShelf("id12");
         });
-//        assertEquals(cd.getOrder().getId(),expected.getOrder().getId());
     }
 
     @Test
