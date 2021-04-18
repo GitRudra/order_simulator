@@ -7,11 +7,15 @@ Create a order simulator which will take the order and cooked the order and send
 2. The order consumer will poll for the order once the order. Once the order recived 
    the consumer will cook the order instantly and send a message for pickup.
 3. The pickup service will receive a message with a delay randomly between 2 and 6 sec
-4. Once the pickup is done the order will be delivered instantly.
+4. Once the pickup is done, the order will be delivered instantly.
 
 ## How to run the code ?
 Run the main method in the class <code>src/main/java/org/css/order/launcher/OrderSimulatorLauncher.java</code>
 The method <code>simulateOrder</code> takes the value of ingestion rate.
+
+##Assumption
+1. There are only single producer which will be feed by a list of Order during producer creation.
+2. There might be multiple consumer and courier service
 
 ## Shelf manager
 For managing the cooked order in the shelf following logic has been implemented.

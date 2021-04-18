@@ -28,11 +28,13 @@ public class OrderSimulator {
     private final ShelfManager shelfManager;
     BlockingQueue<Order> producerConsumerQueue;
     BlockingQueue<PickupRequestMessage> dispatchQueue;
+    private final int SINGLE_TEMPERATURE_SHELF_CAPACITY = 10;
+    private final int OVERFLOW_SHELF_CAPACITY = 15;
 
     public OrderSimulator() {
         producerConsumerQueue = new ArrayBlockingQueue<>(1000);
         dispatchQueue = new DelayQueue<>();
-        shelfManager  = new ShelfManager(10,15);
+        shelfManager  = new ShelfManager(SINGLE_TEMPERATURE_SHELF_CAPACITY,OVERFLOW_SHELF_CAPACITY);
 
     }
 
