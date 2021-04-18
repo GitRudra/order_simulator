@@ -12,6 +12,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Shelf manager class is responsible for managing order in the shelves.
+ * Shelf manager first try to put the order as per temp of the order.
+ * If the order is not available it put the order in overflow shelf.
+ * Also the if the overflow shelf is empty then it removes an order randomly and put the order in the overflow shelf.
+ */
 public class ShelfManager {
     private static final Logger logger  = LoggerFactory.getLogger(ShelfManager.class.getName());
     private final ConcurrentHashMap<String, CookedOrder> hotShelve;
@@ -31,6 +37,10 @@ public class ShelfManager {
         overflowShelve = new ConcurrentHashMap<>(overflowSelfCapacity);
     }
 
+    /**
+     * Method to put order in the shelf.
+     * @param cookedOrder
+     */
     public void putOrderInTheShelf(CookedOrder cookedOrder) {
         String temp = cookedOrder.getOrder().getTemp();
         Order o = cookedOrder.getOrder();
@@ -60,6 +70,13 @@ public class ShelfManager {
         }
     }
 
+    /**
+     * The method insert order in overflow shelf. Before inserting an order into overflow shelf it checks
+     * for any order which can be moved into respective temperature shelf based on the availability.
+     *
+     * @param target the shelf where the order will be kept.
+     * @param cookedOrder cooked order.
+     */
     private void insertIntoOverflowShelve(ConcurrentHashMap<String,CookedOrder> target, CookedOrder cookedOrder){
         boolean foundPlace = false;
         if(target.size() == overflowSelfCapacity){
@@ -93,7 +110,10 @@ public class ShelfManager {
         cookedOrder.setKeptSingleTemperatureShelf(false);
     }
 
-
+    /**
+     * Synchronized method to remove an order from the shelf. Other wise it might happen the same order is attempted
+     * to remove by two thread.
+     */
     private synchronized void removeOrderRandomlyFromOverflowShelve(){
         logger.info("[{}]removing random order from overflow shelf",Thread.currentThread().getName());
         if (overflowShelve.size() ==0){

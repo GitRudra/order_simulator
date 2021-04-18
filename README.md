@@ -26,14 +26,12 @@ For managing the cooked order in the shelf following logic has been implemented.
 3. If the shelf is full then it will check for overflow shelf.
 4. If overflow shelf is also full, it will then check for any order which can be moved
    to corresponding shelf (if available) based on the <code>temp</code> in the order.
-5. If no place found at all then trash a random order from the overflow shelf.
+5. If no place found at all then trash a random order from the overflow shelf and kept the new order in the shelf..
 
 ### Logic to get order from the shelf
-1. Courier service after receiving an order search for the order in the shelf.
-2. If the order not found then the <code>ShelfManager</code> throws exception. 
-   Based on what courier service decide the order availability.
-3. If the order is wasted based on the formula provided in challenge prompt will be considered
-   as order not found.
+1. Courier service after receiving an dispatch mesage (contains order id) search for the order in the shelf.
+2. If the order not found then the <code>ShelfManager</code> throws exception. If there is an exception it means order is not available to be delivered.
+3. If the order is wasted based on the formula provided in challenge prompt will be considered  as order not found.
 
 ## Overall design:
 1. Created three different thread one for each Order Producer, Order Consumer, and Courier Service.
