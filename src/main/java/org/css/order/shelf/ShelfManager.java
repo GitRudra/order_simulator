@@ -41,7 +41,7 @@ public class ShelfManager {
      * Method to put order in the shelf.
      * @param cookedOrder
      */
-    public void putOrderInTheShelf(CookedOrder cookedOrder) {
+    public synchronized void putOrderInTheShelf(CookedOrder cookedOrder) {
         String temp = cookedOrder.getOrder().getTemp();
         Order o = cookedOrder.getOrder();
         if(StringUtils.equals(o.getTemp(),"hot")){
