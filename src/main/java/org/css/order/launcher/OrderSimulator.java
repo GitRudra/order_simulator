@@ -46,7 +46,7 @@ public class OrderSimulator {
      */
     public void simulateOrder(int ingestionRate) throws Exception{
         logger.info("Order simulator starting...");
-        //Reading order json file
+        //Reading order json file to resolve conflict
         OrderDetailsJsonParser parser = new OrderDetailsJsonParser();
         Queue<Order> orderQueue = null;
         try {
